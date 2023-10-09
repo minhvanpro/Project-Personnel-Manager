@@ -1,0 +1,33 @@
+services:
+    back-end:
+      build:
+        context: BackEnd/MyProject
+        dockerfile: Dockerfile
+      restart: unless-stopped
+      ports:
+        - '8080:8080'
+      depends_on:
+        - db
+
+    front-end:
+      build:
+        context: FrontEnd/ui_employee
+        dockerfile: Dockerfile
+      ports:
+        - 80:3000
+      depends_on:
+        - back-end
+
+    db:
+      image: postgres:15.4
+      restart: always
+      environment:
+        - POSTGRES_DB=manager_personnel_db
+        - POSTGRES_USER=postgres
+        - POSTGRES_PASSWORD=123456
+      ports:
+        - '5432:5432'
+      volumes:
+        - db:/var/lib/postgresql/data
+volumes:
+  db:
